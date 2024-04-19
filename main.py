@@ -1,7 +1,5 @@
 import requests
-# response = requests.get('https://animego.org/anime/random')
-# print(response.url)
-
+from db import *
 import asyncio
 import logging
 from aiogram import Bot, Dispatcher, types, F
@@ -9,25 +7,13 @@ from aiogram.filters.command import Command
 
 
 
+bot_token = open('config.txt').readline()
 # Включаем логирование, чтобы не пропустить важные сообщения
 logging.basicConfig(level=logging.INFO)
 # Объект бота
-bot = Bot(token="7139324581:AAHa2UuMR_EmPahumk8mf7trmUNObe06IAA")
+bot = Bot(bot_token)
 # Диспетчер
 dp = Dispatcher()
-
-# Хэндлер на команду /start
-# @dp.message(Command("start"))
-# async def cmd_start(message: types.Message):
-#     await message.answer("Hello!")
-@dp.message(Command("start"))
-async def cmd_start(message: types.Message):
-    kb = [
-        [types.KeyboardButton(text="Найти")]
-    ]
-    keyboard = types.ReplyKeyboardMarkup(keyboard=kb)
-    await message.answer("Привет, я бот, ищущий случайное аниме", reply_markup=keyboard)
-
 
 
 # Запуск процесса поллинга новых апдейтов
@@ -43,11 +29,19 @@ async def cmd_start(message: types.Message):
         keyboard=kb,
         resize_keyboard=True
     )
-    await message.answer("Привет, я бот для поиска случайного аниме.", reply_markup=keyboard)
+    await message.answer(f"Привет, {message.from_user.full_name}, я бот для поиска случайного аниме.", reply_markup=keyboard)
 
 @dp.message(F.text.lower() == "найти")
 async def with_puree(message: types.Message):
-    await message.reply(requests.get('https://animego.org/anime/random').url)
+    ani_url = requests.get('https://animego.org/anime/random').url
+    User.get_or_create(user_id = message.from_user.id)
+    while True:
+        if ani_url == User.get(User.user_id == message.from_user.id).anime_url:
+            ani_url = requests.get('https://animego.org/anime/random').url
+        else:
+            User.update(anime_url=ani_url)
+            break
+    await message.reply(ani_url)
 
 if __name__ == "__main__":
     asyncio.run(main())
