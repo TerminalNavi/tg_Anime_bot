@@ -34,12 +34,13 @@ async def cmd_start(message: types.Message):
 @dp.message(F.text.lower() == "найти")
 async def with_puree(message: types.Message):
     ani_url = requests.get('https://animego.org/anime/random').url
-    User.get_or_create(user_id = message.from_user.id)
+    u = User.get_or_create(user_id = message.from_user.id)
     while True:
-        if ani_url == User.get(User.user_id == message.from_user.id).anime_url:
+        if ani_url == u[0].anime_url:
             ani_url = requests.get('https://animego.org/anime/random').url
         else:
-            User.update(anime_url=ani_url)
+            u[0].anime_url = ani_url
+            u[0].save()
             break
     await message.reply(ani_url)
 
