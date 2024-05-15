@@ -9,7 +9,7 @@ from aiogram.types import Message, BotCommand, \
 from db import User
 
 
-bot_token = open('config.txt', encoding='UTF-8').readline().replace(' ', '')
+bot_token = open('config.txt', encoding='UTF-8').readline().replace('\n', '')
 logging.basicConfig(level=logging.INFO)
 bot = Bot(bot_token)
 dp = Dispatcher()
