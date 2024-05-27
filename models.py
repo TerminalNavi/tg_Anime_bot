@@ -16,10 +16,12 @@ class User(DB):
 
 class Anime(DB):
     url = TextField()
+    likes = IntegerField(default=0)
 
 class UserAnime(DB):
     user = ForeignKeyField(User, backref='animes')
     anime = ForeignKeyField(Anime)
+    liked = IntegerField(default=0)
 
 
 db.connect()

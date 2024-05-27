@@ -3,6 +3,7 @@ import requests
 from aiogram import F, Router
 from aiogram.types import Message
 from models import *
+from keyboards.like_keyboard import get_like
 
 
 router = Router()
@@ -17,6 +18,6 @@ async def with_puree(message: Message):
         anime, _ = Anime.get_or_create(url=anime_url)
         notify = UserAnime.filter(user=user, anime=anime)
         if notify.count() == 0:
-            UserAnime.create(user = user, anime = anime)
-            await message.answer(anime_url)
+            user_anime = UserAnime.create(user = user, anime = anime)
+            await message.answer(text=f'{anime_url}\n Вам понравилось аниме?', reply_markup=get_like(user_anime))
             break
