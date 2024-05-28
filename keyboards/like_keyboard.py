@@ -1,5 +1,5 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from models import UserAnime
+from utils.models import UserAnime
 
 def get_like(user_anime: UserAnime):
     return InlineKeyboardMarkup(

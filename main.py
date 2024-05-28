@@ -2,15 +2,20 @@ import asyncio
 import logging
 from aiogram import Bot, Dispatcher
 from handlers import include_routers
-from config_reader import config
-
+from utils.config_reader import config
+from handlers.newsletter import sending_messages
 
 bot = Bot(token=config.bot_token.get_secret_value())
 logging.basicConfig(level=logging.INFO)
 dp = Dispatcher()
 
+async def on_startup():
+    """Обертка что бы запустить параллельный процесс"""
+    asyncio.create_task(sending_messages(bot))
+
 async def main():
-    '''Функция для запуска бота'''
+    '''Старт бота'''
+    dp.startup.register(on_startup)
     include_routers(dp)
     await dp.start_polling(bot)
 
