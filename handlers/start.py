@@ -1,7 +1,7 @@
 from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
-from models import *
+from utils.models import *
 from keyboards.random_kb import kb_find_random
 
 
