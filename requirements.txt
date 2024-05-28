@@ -1,3 +1,4 @@
 requests
 peewee
 aiogram
+pydantic-settings

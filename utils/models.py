@@ -1,5 +1,5 @@
 '''Импорт модулей для модуля ДБ'''
-from peewee import SqliteDatabase, Model, TextField, ForeignKeyField, IntegerField
+from peewee import SqliteDatabase, Model, TextField, ForeignKeyField, IntegerField, TimeField
 
 db = SqliteDatabase('sqlite.db')
 
@@ -13,10 +13,10 @@ class User(DB):
     '''Запись в базе данных.
     Имеет два поля - id чата и последняя отправленная ссылка'''
     user_id = IntegerField()
+    time = TimeField(null=True)
 
 class Anime(DB):
     url = TextField()
-    likes = IntegerField(default=0)
 
 class UserAnime(DB):
     user = ForeignKeyField(User, backref='animes')
